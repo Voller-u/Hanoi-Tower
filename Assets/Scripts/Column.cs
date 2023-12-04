@@ -39,12 +39,14 @@ public class Column : MonoBehaviour
         t_plate.SetActive(true);
         t_plate.GetComponent<Plate>().size = size;
         list_plates.Add(t_plate);
+        //TODO 播放放入盘子的动画 改变盘子状态
     }
 
     int PopPlate()
     {
         int size = list_plates[^1].GetComponent<Plate>().size;
         list_plates.RemoveAt(list_plates.Count-1);
+        //TODO 播放取出盘子的动画 改变盘子状态
         return size;
     }
 }
