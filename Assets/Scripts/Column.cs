@@ -28,7 +28,7 @@ public class Column : MonoBehaviour
 
     }
 
-    void PushPlate(int size) //size为1代表最小的盘子
+    public void PushPlate(int size) //size为1代表最小的盘子
     {
         GameObject t_plate = Instantiate(prefab_plate, gameObject.transform);
         float y = -0.5f * GameManager.instance.heightColumn + (list_plates.Count + 0.5f) * GameManager.instance.heightPlate;
@@ -38,15 +38,18 @@ public class Column : MonoBehaviour
         t_plate.GetComponent<RectTransform>().sizeDelta = new Vector2(width, GameManager.instance.heightPlate);
         t_plate.SetActive(true);
         t_plate.GetComponent<Plate>().size = size;
+        t_plate.GetComponent<Plate>().text_size.text = size.ToString();
         list_plates.Add(t_plate);
         //TODO 播放放入盘子的动画 改变盘子状态
     }
 
-    int PopPlate()
+    public int PopPlate()
     {
-        int size = list_plates[^1].GetComponent<Plate>().size;
-        list_plates.RemoveAt(list_plates.Count-1);
+        GameObject t_plate = list_plates[^1];
+        int size = t_plate.GetComponent<Plate>().size;
+        list_plates.Remove(t_plate);
         //TODO 播放取出盘子的动画 改变盘子状态
+        Destroy(t_plate);
         return size;
     }
 }
