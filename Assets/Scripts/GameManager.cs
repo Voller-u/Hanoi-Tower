@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    
 
-    
+
+    public bool isExecuting = false;
     private List<GameObject> list_columns = new();
     public GameObject prefab_column;
     public GameObject panel_column;
@@ -53,7 +53,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.G))
+        {
             GenerateColumn();
+            Debug.Log("生成柱子了");
+        }
+            
 
         if (Input.GetKeyDown(KeyCode.R) && !hasExecuted)
             CallExecute();
@@ -69,6 +73,7 @@ public class GameManager : MonoBehaviour
         maxWidthPlate = intervalColumn * 0.8f;
         minWidthPlate = intervalColumn * 0.2f;
 
+        list_moveInfos.Clear();
         list_columns.Clear();
         ClearChild(panel_column);
         float x0 = intervalColumn * -0.5f;
@@ -82,7 +87,7 @@ public class GameManager : MonoBehaviour
         }
         list_columns[0].GetComponent<Column>().GeneratePlate();
     }
-    void move(int x, int y)
+    void Move(int x, int y)
     {
         timerWaitForExecute = timeWaitForExecute;
         list_moveInfos.Add(new(x, y));
@@ -91,7 +96,6 @@ public class GameManager : MonoBehaviour
     void CallExecute()
     {
         hasExecuted = true;
-
         list_moveInfos.Clear();
         timerWaitForExecute = timeWaitForExecute;
         WaitForExecute();
@@ -101,12 +105,12 @@ public class GameManager : MonoBehaviour
     {
         if (n == 1)
         {
-            move(a, c);
+            Move(a, c);
         }
         else
         {
             Execute(n - 1, a, c, b);//将A座上的n-1个盘子借助C座移向B座
-            move(a, c);             //将A座上最后一个盘子移向C座
+            Move(a, c);             //将A座上最后一个盘子移向C座
             Execute(n - 1, b, a, c);//将B座上的n-1个盘子借助A座移向C座
         }
     }
@@ -126,6 +130,7 @@ public class GameManager : MonoBehaviour
     {
         if(list_moveInfos.Count > 0)
         {
+            isExecuting = true;
             MoveInfo t_info = list_moveInfos[0];
             //Debug.Log("move " + t_info.source + " -> " + t_info.destination);
             list_columns[t_info.destination].GetComponent<Column>().PushPlate(list_columns[t_info.source].GetComponent<Column>().PopPlate());
@@ -133,11 +138,16 @@ public class GameManager : MonoBehaviour
             Invoke(nameof(AutoMove), intervalMove);
             return;
         }
+        isExecuting = false;
     }
     public void ClearChild(GameObject p)
     {
         for (int i = 0; i < p.transform.childCount; i++)
             if(p.transform.GetChild(i).gameObject.activeSelf)
                 Destroy(p.transform.GetChild(i).gameObject);
+    }
+    private void OnValidate()
+    {
+        GenerateColumn();
     }
 }
