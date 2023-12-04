@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     public float timerWaitForExecute;
     [Header("每次移动的时间间隔")]
     public float intervalMove = 0.3f;
-
+    public int maxCountPlate = 20;
     private bool hasExecuted = false;
     public class MoveInfo
     {
@@ -63,12 +63,13 @@ public class GameManager : MonoBehaviour
 
     void GenerateColumn()
     {
-        hasExecuted = false;
+       
 
         heightPlate = heightColumn / (countPlate + 1.5f);
         maxWidthPlate = intervalColumn * 0.8f;
         minWidthPlate = intervalColumn * 0.2f;
 
+        list_moveInfos.Clear();
         list_columns.Clear();
         ClearChild(panel_column);
         float x0 = intervalColumn * -0.5f;
@@ -81,6 +82,8 @@ public class GameManager : MonoBehaviour
             list_columns.Add(t_column);
         }
         list_columns[0].GetComponent<Column>().GeneratePlate();
+
+        hasExecuted = false;
     }
     void move(int x, int y)
     {
@@ -90,6 +93,8 @@ public class GameManager : MonoBehaviour
     }
     void CallExecute()
     {
+        if (countPlate >= maxCountPlate)
+            return;
         hasExecuted = true;
 
         list_moveInfos.Clear();
@@ -139,5 +144,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < p.transform.childCount; i++)
             if(p.transform.GetChild(i).gameObject.activeSelf)
                 Destroy(p.transform.GetChild(i).gameObject);
+    }
+
+    void OnValidate()
+    {
+        if(Application.isPlaying && instance)
+            GenerateColumn();
     }
 }

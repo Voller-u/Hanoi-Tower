@@ -429,11 +429,11 @@ MonoBehaviour:
   panel_column: {fileID: 2011653221}
   intervalColumn: 500
   heightColumn: 600
-  widthColumn: 10
+  widthColumn: 3
   countPlate: 3
-  heightPlate: 0
-  maxWidthPlate: 0
-  minWidthPlate: 0
+  heightPlate: 133.33333
+  maxWidthPlate: 400
+  minWidthPlate: 100
   timeWaitForExecute: 0.2
   timerWaitForExecute: 0.2
   intervalMove: 0.3

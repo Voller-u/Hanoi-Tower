@@ -35,6 +35,8 @@ public class Column : MonoBehaviour
         t_plate.GetComponent<RectTransform>().localPosition = new Vector2(0,y);
         float width = GameManager.instance.minWidthPlate + (GameManager.instance.maxWidthPlate - GameManager.instance.minWidthPlate) /
                                                             (GameManager.instance.countPlate - 1) * (size - 1);
+        if (GameManager.instance.countPlate == 1)
+            width = GameManager.instance.maxWidthPlate;
         t_plate.GetComponent<RectTransform>().sizeDelta = new Vector2(width, GameManager.instance.heightPlate);
         t_plate.SetActive(true);
         t_plate.GetComponent<Plate>().size = size;
